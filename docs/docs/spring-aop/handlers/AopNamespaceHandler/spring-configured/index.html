@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="&lt;aop: spring-configured/&gt; 当我们使用 Spring 容器的时候，一般是从 Spring 容器中获取 Bean，Spring 会自动进行 依赖注入。
+&lt;aop:spring-configured/&gt; 的作用是，提供了能为任何对象进行依赖注入的能力，场景是在脱离容器管理而创建的对象时进行依赖注入，如：
+ 脱离Spring 容器进行 事务管理 其他&hellip; 详见 spring-aspects.xxx.jar:/META-INF/aop.xml 中的支持  原理是 AspectJ 的 编译期 或 类加载时 织入，new 对象前已经在 class字节码中 织入了相关代码。
+所以需要 AspectJ 提供的 ajc 编译器进行编译（也可通过 Maven 插件进行编译），也可 通过 LTW 机制进行使用。
+AspectJ Maven 插件进行编译（编译期织入） 官方：http://www.mojohaus.org/aspectj-maven-plugin/index.html
+示例：
+&lt;plugins&gt; &lt;plugin&gt; &lt;groupId&gt;org.codehaus.mojo&lt;/groupId&gt; &lt;artifactId&gt;aspectj-maven-plugin&lt;/artifactId&gt; &lt;version&gt;1.11&lt;/version&gt; &lt;configuration&gt; &lt;outxmlfile&gt;META-INF/aop.xml&lt;/outxmlfile&gt; &lt;aspectLibraries&gt; &lt;aspectLibrary&gt; &lt;groupId&gt;org.springframework&lt;/groupId&gt; &lt;artifactId&gt;spring-aspects&lt;/artifactId&gt; &lt;/aspectLibrary&gt; &lt;/aspectLibraries&gt; &lt;complianceLevel&gt;1.8&lt;/complianceLevel&gt; &lt;source&gt;1.8&lt;/source&gt; &lt;target&gt;1.8&lt;/target&gt; &lt;forceAjcCompile&gt;true&lt;/forceAjcCompile&gt; &lt;/configuration&gt; &lt;executions&gt; &lt;execution&gt; &lt;goals&gt; &lt;goal&gt;compile&lt;/goal&gt; &lt;goal&gt;test-compile&lt;/goal&gt; &lt;/goals&gt; &lt;/execution&gt; &lt;/executions&gt; &lt;dependencies&gt; &lt;dependency&gt; &lt;groupId&gt;org."><meta property="og:title" content="" />
+<meta property="og:description" content="&lt;aop: spring-configured/&gt; 当我们使用 Spring 容器的时候，一般是从 Spring 容器中获取 Bean，Spring 会自动进行 依赖注入。
+&lt;aop:spring-configured/&gt; 的作用是，提供了能为任何对象进行依赖注入的能力，场景是在脱离容器管理而创建的对象时进行依赖注入，如：
+ 脱离Spring 容器进行 事务管理 其他&hellip; 详见 spring-aspects.xxx.jar:/META-INF/aop.xml 中的支持  原理是 AspectJ 的 编译期 或 类加载时 织入，new 对象前已经在 class字节码中 织入了相关代码。
+所以需要 AspectJ 提供的 ajc 编译器进行编译（也可通过 Maven 插件进行编译），也可 通过 LTW 机制进行使用。
+AspectJ Maven 插件进行编译（编译期织入） 官方：http://www.mojohaus.org/aspectj-maven-plugin/index.html
+示例：
+&lt;plugins&gt; &lt;plugin&gt; &lt;groupId&gt;org.codehaus.mojo&lt;/groupId&gt; &lt;artifactId&gt;aspectj-maven-plugin&lt;/artifactId&gt; &lt;version&gt;1.11&lt;/version&gt; &lt;configuration&gt; &lt;outxmlfile&gt;META-INF/aop.xml&lt;/outxmlfile&gt; &lt;aspectLibraries&gt; &lt;aspectLibrary&gt; &lt;groupId&gt;org.springframework&lt;/groupId&gt; &lt;artifactId&gt;spring-aspects&lt;/artifactId&gt; &lt;/aspectLibrary&gt; &lt;/aspectLibraries&gt; &lt;complianceLevel&gt;1.8&lt;/complianceLevel&gt; &lt;source&gt;1.8&lt;/source&gt; &lt;target&gt;1.8&lt;/target&gt; &lt;forceAjcCompile&gt;true&lt;/forceAjcCompile&gt; &lt;/configuration&gt; &lt;executions&gt; &lt;execution&gt; &lt;goals&gt; &lt;goal&gt;compile&lt;/goal&gt; &lt;goal&gt;test-compile&lt;/goal&gt; &lt;/goals&gt; &lt;/execution&gt; &lt;/executions&gt; &lt;dependencies&gt; &lt;dependency&gt; &lt;groupId&gt;org." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://hello-world-example.github.io/Spring-AOP/docs/spring-aop/handlers/AopNamespaceHandler/spring-configured/" />
+
+<title>Spring Configured | Spring-AOP</title>
+<link rel="icon" href="/Spring-AOP/favicon.png" type="image/x-icon">
+
+
+<link rel="stylesheet" href="/Spring-AOP/book.min.d436f463c9471cfab26a8b71cd2f50b6abf5225806391453da4ca111d1834fef.css" integrity="sha256-1Db0Y8lHHPqyaotxzS9Qtqv1IlgGORRT2kyhEdGDT&#43;8=">
+
+
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+  
+</head>
+
+<body>
+  <input type="checkbox" class="hidden" id="menu-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      
+  <nav>
+<h2 class="book-brand">
+  <a href="/Spring-AOP"><span>Spring-AOP</span>
+  </a>
+</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+  <ul>
+<li>
+  <a href="/Spring-AOP/docs/spring-aop/core/">概念</a></li>
+<li>
+  <a href="/Spring-AOP/docs/spring-aop/aopalliance/">aopalliance</a></li>
+<li><strong>Spring AOP 使用方式</strong>
+<ul>
+<li>
+  <a href="/Spring-AOP/docs/spring-aop/usage/annotation-usage/">基于AspectJ注解</a></li>
+<li>
+  <a href="/Spring-AOP/docs/spring-aop/usage/schema-xml-usage/">基于 Schema</a></li>
+<li>
+  <a href="/Spring-AOP/docs/spring-aop/usage/code-usage/">基于编码</a></li>
+</ul>
+</li>
+<li><strong>Handlers</strong>
+<ul>
+<li><strong>AopNamespaceHandler</strong>
+<ul>
+<li>
+  <a href="/Spring-AOP/docs/spring-aop/handlers/AopNamespaceHandler/spring-configured/"class=active>&lt;aop: spring-configured/&gt;</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var menu=document.querySelector("aside.book-menu nav");addEventListener("beforeunload",function(event){localStorage.setItem("menu.scrollTop",menu.scrollTop);});menu.scrollTop=localStorage.getItem("menu.scrollTop");})();</script>
+
+
+ 
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/Spring-AOP/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>Spring Configured</strong>
+
+  <label for="toc-control">
+    <img src="/Spring-AOP/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+  </label>
+</div>
+
+
+  
+    <input type="checkbox" class="hidden" id="toc-control" />
+    <aside class="hidden clearfix">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#ltaop-spring-configuredgt">&lt;aop: spring-configured/&gt;</a>
+      <ul>
+        <li><a href="#aspectj-maven-插件进行编译编译期织入">AspectJ Maven 插件进行编译（编译期织入）</a></li>
+        <li><a href="#ltw类加载期织入">LTW(类加载期织入)</a></li>
+        <li><a href="#使用步骤">使用步骤</a>
+          <ul>
+            <li><a href="#示例">示例</a></li>
+          </ul>
+        </li>
+        <li><a href="#开启方式">开启方式</a></li>
+        <li><a href="#参考资料">参考资料</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+    </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown"><h1 id="ltaop-spring-configuredgt">&lt;aop: spring-configured/&gt;</h1>
+<p>当我们使用 Spring 容器的时候，一般是从 Spring 容器中获取 Bean，Spring 会自动进行 依赖注入。</p>
+<p><code>&lt;aop:spring-configured/&gt;</code> 的作用是，提供了能<strong>为任何对象进行依赖注入的能力</strong>，场景是在脱离容器管理而创建的对象时进行依赖注入，如：</p>
+<ul>
+<li>脱离Spring 容器进行 事务管理</li>
+<li>其他&hellip; 详见 spring-aspects.xxx.jar:/META-INF/aop.xml 中的支持</li>
+</ul>
+<p>原理是 AspectJ 的 编译期 或 类加载时 织入，new 对象前已经在 class字节码中 织入了相关代码。</p>
+<p>所以需要 AspectJ 提供的 <code>ajc</code> 编译器进行编译（也可通过 Maven 插件进行编译），也可 通过 LTW 机制进行使用。</p>
+<h2 id="aspectj-maven-插件进行编译编译期织入">AspectJ Maven 插件进行编译（编译期织入）</h2>
+<p>官方：http://www.mojohaus.org/aspectj-maven-plugin/index.html</p>
+<p>示例：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#f92672">&lt;plugins&gt;</span>
+    <span style="color:#f92672">&lt;plugin&gt;</span>
+        <span style="color:#f92672">&lt;groupId&gt;</span>org.codehaus.mojo<span style="color:#f92672">&lt;/groupId&gt;</span>
+        <span style="color:#f92672">&lt;artifactId&gt;</span>aspectj-maven-plugin<span style="color:#f92672">&lt;/artifactId&gt;</span>
+        <span style="color:#f92672">&lt;version&gt;</span>1.11<span style="color:#f92672">&lt;/version&gt;</span>
+        <span style="color:#f92672">&lt;configuration&gt;</span>
+            <span style="color:#f92672">&lt;outxmlfile&gt;</span>META-INF/aop.xml<span style="color:#f92672">&lt;/outxmlfile&gt;</span>
+            <span style="color:#f92672">&lt;aspectLibraries&gt;</span>
+                <span style="color:#f92672">&lt;aspectLibrary&gt;</span>
+                    <span style="color:#f92672">&lt;groupId&gt;</span>org.springframework<span style="color:#f92672">&lt;/groupId&gt;</span>
+                    <span style="color:#f92672">&lt;artifactId&gt;</span>spring-aspects<span style="color:#f92672">&lt;/artifactId&gt;</span>
+                <span style="color:#f92672">&lt;/aspectLibrary&gt;</span>
+            <span style="color:#f92672">&lt;/aspectLibraries&gt;</span>
+            <span style="color:#f92672">&lt;complianceLevel&gt;</span>1.8<span style="color:#f92672">&lt;/complianceLevel&gt;</span>
+            <span style="color:#f92672">&lt;source&gt;</span>1.8<span style="color:#f92672">&lt;/source&gt;</span>
+            <span style="color:#f92672">&lt;target&gt;</span>1.8<span style="color:#f92672">&lt;/target&gt;</span>
+            <span style="color:#f92672">&lt;forceAjcCompile&gt;</span>true<span style="color:#f92672">&lt;/forceAjcCompile&gt;</span>
+        <span style="color:#f92672">&lt;/configuration&gt;</span>
+        <span style="color:#f92672">&lt;executions&gt;</span>
+            <span style="color:#f92672">&lt;execution&gt;</span>
+                <span style="color:#f92672">&lt;goals&gt;</span>
+                    <span style="color:#f92672">&lt;goal&gt;</span>compile<span style="color:#f92672">&lt;/goal&gt;</span>
+                    <span style="color:#f92672">&lt;goal&gt;</span>test-compile<span style="color:#f92672">&lt;/goal&gt;</span>
+                <span style="color:#f92672">&lt;/goals&gt;</span>
+            <span style="color:#f92672">&lt;/execution&gt;</span>
+        <span style="color:#f92672">&lt;/executions&gt;</span>
+        <span style="color:#f92672">&lt;dependencies&gt;</span>
+            <span style="color:#f92672">&lt;dependency&gt;</span>
+                <span style="color:#f92672">&lt;groupId&gt;</span>org.aspectj<span style="color:#f92672">&lt;/groupId&gt;</span>
+                <span style="color:#f92672">&lt;artifactId&gt;</span>aspectjrt<span style="color:#f92672">&lt;/artifactId&gt;</span>
+                <span style="color:#f92672">&lt;version&gt;</span>${aspectj.version}<span style="color:#f92672">&lt;/version&gt;</span>
+            <span style="color:#f92672">&lt;/dependency&gt;</span>
+            <span style="color:#f92672">&lt;dependency&gt;</span>
+                <span style="color:#f92672">&lt;groupId&gt;</span>org.aspectj<span style="color:#f92672">&lt;/groupId&gt;</span>
+                <span style="color:#f92672">&lt;artifactId&gt;</span>aspectjtools<span style="color:#f92672">&lt;/artifactId&gt;</span>
+                <span style="color:#f92672">&lt;version&gt;</span>${aspectj.version}<span style="color:#f92672">&lt;/version&gt;</span>
+            <span style="color:#f92672">&lt;/dependency&gt;</span>
+        <span style="color:#f92672">&lt;/dependencies&gt;</span>
+    <span style="color:#f92672">&lt;/plugin&gt;</span>
+<span style="color:#f92672">&lt;/plugins&gt;</span>
+</code></pre></div><h2 id="ltw类加载期织入">LTW(类加载期织入)</h2>
+<p>详见：
+  <a href="spring-context/handlers/ContextNamespaceHandler/load-time-weaver.md">&lt;context: load-time-weaver/&gt;</a></p>
+<h2 id="使用步骤">使用步骤</h2>
+<ul>
+<li>添加依赖 <code>org.springframework:spring-aspects</code>（间接依赖 <code>org.aspectj:aspectjweaver</code> ）</li>
+<li>添加依赖 <code>org.springframework:spring-tx</code>（依赖事务这个 jar 的原因是 <code>spring-aspects.jar:/META-INF/aop.xml</code> 中配置的  xxx.aj 使用到了 spring-tx 中的类）</li>
+<li>为类加上 <code>@Configurable</code> 注解 进行标记</li>
+<li>在类中 为被依赖的字段 加上 <code>@Autowired</code> 或 <code>@Resource</code> 注解（与 Spring 常规使用方式类似）</li>
+</ul>
+<h3 id="示例">示例</h3>
+<p>被依赖的类，受 Spring 管理</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@Service</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SomeService</span> <span style="color:#f92672">{</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>不受 Spring 管理的类</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@Configurable</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">NewClass</span> <span style="color:#f92672">{</span>
+    <span style="color:#a6e22e">@Autowired</span>
+    <span style="color:#66d9ef">private</span> SomeService someService<span style="color:#f92672">;</span>
+    
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">test</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">// 查看是否是 null
+</span><span style="color:#75715e"></span>        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>someService<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>编译期织入方式运行</p>
+<p>使用 <code>aspectj-maven-plugin</code> 插件，执行 <code>mvn clean test</code></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@ComponentScan</span>
+<span style="color:#a6e22e">@EnableSpringConfigured</span> <span style="color:#75715e">// AOP 方式依赖注入
+</span><span style="color:#75715e"></span><span style="color:#a6e22e">@ContextConfiguration</span><span style="color:#f92672">(</span>classes <span style="color:#f92672">=</span> SpringDITest<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
+<span style="color:#a6e22e">@RunWith</span><span style="color:#f92672">(</span>SpringJUnit4ClassRunner<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SpringDITest</span> <span style="color:#f92672">{</span>
+
+    <span style="color:#a6e22e">@Test</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">testDI</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+    	<span style="color:#75715e">// SomeService@49139829
+</span><span style="color:#75715e"></span>        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> NewClass<span style="color:#f92672">().</span><span style="color:#a6e22e">someService</span><span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>类加载期方式运行</p>
+<p>添加 javaagent 参数 <code>-javaagent:~/.m2/repository/org/springframework/spring-instrument/4.3.20.RELEASE/spring-instrument-4.3.20.RELEASE.jar</code></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@ComponentScan</span>
+<span style="color:#a6e22e">@EnableSpringConfigured</span> <span style="color:#75715e">// AOP 方式依赖注入
+</span><span style="color:#75715e"></span><span style="color:#a6e22e">@EnableLoadTimeWeaving</span> <span style="color:#75715e">// LTW
+</span><span style="color:#75715e"></span><span style="color:#a6e22e">@ContextConfiguration</span><span style="color:#f92672">(</span>classes <span style="color:#f92672">=</span> SpringDITest<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
+<span style="color:#a6e22e">@RunWith</span><span style="color:#f92672">(</span>SpringJUnit4ClassRunner<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">)</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SpringDITest</span> <span style="color:#f92672">{</span>
+
+    <span style="color:#a6e22e">@Test</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">testDI</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> NewClass<span style="color:#f92672">().</span><span style="color:#a6e22e">someService</span><span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+
+<span style="color:#f92672">}</span>
+</code></pre></div><h2 id="开启方式">开启方式</h2>
+<ul>
+<li><code>&lt;aop:spring-configured/&gt;</code> 或 <code>&lt;content:spring-configured/&gt;</code></li>
+<li><code>@EnableSpringConfigured</code> 注解</li>
+<li><code>&lt;bean class=&quot;org.springframework.beans.factory.aspectj.AnnotationBeanConfigurerAspect&quot; factory-method=&quot;aspectOf&quot;/&gt;</code></li>
+</ul>
+<h2 id="参考资料">参考资料</h2>
+<ul>
+<li>
+  <a href="http://shouce.jb51.net/spring/aop.html#aop-atconfigurable">6.8.1. 在Spring中使用AspectJ进行domain object的依赖注入</a></li>
+<li>
+  <a href="https://github.com/Jotschi/spring-aspectj-compiletime-weaving">示例项目：spring-aspectj-compiletime-weaving</a></li>
+<li>
+  <a href="https://blog.csdn.net/zjerryj/article/details/77133267">使用Spring AOP向领域模型注入依赖</a></li>
+</ul>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex justify-between">
+
+
+
+
+
+  <div>
+    <a class="flex align-center" href="https://github.com/hello-world-example/Spring-AOP/edit/master/HuGo/content/docs/spring-aop/handlers/AopNamespaceHandler/spring-configured.md" target="_blank" rel="noopener">
+      <img src="/Spring-AOP/svg/edit.svg" class="book-icon" alt="Edit" />
+      <span>Edit this page</span>
+    </a>
+  </div>
+
+</div>
+
+ 
+        
+<script>
+var images = document.getElementsByTagName("img")
+console.info(images.length)
+for(var i=0; i<images.length; i++){
+  var image = images[i]
+  var src = image.getAttribute("src");
+  if(src.startsWith("-images")){
+    image.setAttribute("src", "../" + src)
+  }
+}
+</script>
+
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#ltaop-spring-configuredgt">&lt;aop: spring-configured/&gt;</a>
+      <ul>
+        <li><a href="#aspectj-maven-插件进行编译编译期织入">AspectJ Maven 插件进行编译（编译期织入）</a></li>
+        <li><a href="#ltw类加载期织入">LTW(类加载期织入)</a></li>
+        <li><a href="#使用步骤">使用步骤</a>
+          <ul>
+            <li><a href="#示例">示例</a></li>
+          </ul>
+        </li>
+        <li><a href="#开启方式">开启方式</a></li>
+        <li><a href="#参考资料">参考资料</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+ 
+    </aside>
+    
+  </main>
+
+  
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

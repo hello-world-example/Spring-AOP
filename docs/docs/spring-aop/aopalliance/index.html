@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="aopalliance &lt;dependency&gt; &lt;groupId&gt;aopalliance&lt;/groupId&gt; &lt;artifactId&gt;aopalliance&lt;/artifactId&gt; &lt;version&gt;1.0&lt;/version&gt; &lt;/dependency&gt; 这个包是 AOP联盟 的API包，里面包含了针对面向切面的接口。
+目前 Spring 已把改包 纳入到了 spring-aop 模块里面，所以无需依赖。
+包结构  org.aopalliance  aop  Advice： 空接口，标识 接口 是 一个 advice 接口（通知、增强，如：前置通知、后置增强&hellip; 直译过来是通知，按照代理的意思是增强） AspectException   intercept   Interceptor ： 空接口，标识 接口 是 一个 通用的拦截器。拦截器可以拦截运行时程序中的事件(方法调用、字段访问、异常&hellip;) ，事件的具体操作由 Joinpoint 实现
+  ConstructorInterceptor：构造器 拦截器
+  MethodInterceptor：方法 拦截器
+  Joinpoint：代码的执行，方法的执行，构造器的执行等，代表被切入的位置。功能：调用被切入对象、获取被切入对象、获取被调用对象（方法、构造器、字段..）
+  Invocation：代表程序的调用，功能：获取调用参数
+  ConstructorInvocation：构造器的调用，功能：获取 Constructor 构造器对象
+  MethodInvocation：方法的调用：获取 Method 对象
+      继承结构  Advice org."><meta property="og:title" content="" />
+<meta property="og:description" content="aopalliance &lt;dependency&gt; &lt;groupId&gt;aopalliance&lt;/groupId&gt; &lt;artifactId&gt;aopalliance&lt;/artifactId&gt; &lt;version&gt;1.0&lt;/version&gt; &lt;/dependency&gt; 这个包是 AOP联盟 的API包，里面包含了针对面向切面的接口。
+目前 Spring 已把改包 纳入到了 spring-aop 模块里面，所以无需依赖。
+包结构  org.aopalliance  aop  Advice： 空接口，标识 接口 是 一个 advice 接口（通知、增强，如：前置通知、后置增强&hellip; 直译过来是通知，按照代理的意思是增强） AspectException   intercept   Interceptor ： 空接口，标识 接口 是 一个 通用的拦截器。拦截器可以拦截运行时程序中的事件(方法调用、字段访问、异常&hellip;) ，事件的具体操作由 Joinpoint 实现
+  ConstructorInterceptor：构造器 拦截器
+  MethodInterceptor：方法 拦截器
+  Joinpoint：代码的执行，方法的执行，构造器的执行等，代表被切入的位置。功能：调用被切入对象、获取被切入对象、获取被调用对象（方法、构造器、字段..）
+  Invocation：代表程序的调用，功能：获取调用参数
+  ConstructorInvocation：构造器的调用，功能：获取 Constructor 构造器对象
+  MethodInvocation：方法的调用：获取 Method 对象
+      继承结构  Advice org." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://hello-world-example.github.io/Spring-AOP/docs/spring-aop/aopalliance/" />
+
+<title>Aopalliance | Spring-AOP</title>
+<link rel="icon" href="/Spring-AOP/favicon.png" type="image/x-icon">
+
+
+<link rel="stylesheet" href="/Spring-AOP/book.min.d436f463c9471cfab26a8b71cd2f50b6abf5225806391453da4ca111d1834fef.css" integrity="sha256-1Db0Y8lHHPqyaotxzS9Qtqv1IlgGORRT2kyhEdGDT&#43;8=">
+
+
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+  
+</head>
+
+<body>
+  <input type="checkbox" class="hidden" id="menu-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      
+  <nav>
+<h2 class="book-brand">
+  <a href="/Spring-AOP"><span>Spring-AOP</span>
+  </a>
+</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+  <ul>
+<li>
+  <a href="/Spring-AOP/docs/spring-aop/core/">概念</a></li>
+<li>
+  <a href="/Spring-AOP/docs/spring-aop/aopalliance/"class=active>aopalliance</a></li>
+<li><strong>Spring AOP 使用方式</strong>
+<ul>
+<li>
+  <a href="/Spring-AOP/docs/spring-aop/usage/annotation-usage/">基于AspectJ注解</a></li>
+<li>
+  <a href="/Spring-AOP/docs/spring-aop/usage/schema-xml-usage/">基于 Schema</a></li>
+<li>
+  <a href="/Spring-AOP/docs/spring-aop/usage/code-usage/">基于编码</a></li>
+</ul>
+</li>
+<li><strong>Handlers</strong>
+<ul>
+<li><strong>AopNamespaceHandler</strong>
+<ul>
+<li>
+  <a href="/Spring-AOP/docs/spring-aop/handlers/AopNamespaceHandler/spring-configured/">&lt;aop: spring-configured/&gt;</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var menu=document.querySelector("aside.book-menu nav");addEventListener("beforeunload",function(event){localStorage.setItem("menu.scrollTop",menu.scrollTop);});menu.scrollTop=localStorage.getItem("menu.scrollTop");})();</script>
+
+
+ 
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/Spring-AOP/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>Aopalliance</strong>
+
+  <label for="toc-control">
+    <img src="/Spring-AOP/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+  </label>
+</div>
+
+
+  
+    <input type="checkbox" class="hidden" id="toc-control" />
+    <aside class="hidden clearfix">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#aopalliance">aopalliance</a>
+      <ul>
+        <li><a href="#包结构">包结构</a></li>
+        <li><a href="#继承结构">继承结构</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+    </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown"><h1 id="aopalliance">aopalliance</h1>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#f92672">&lt;dependency&gt;</span>
+    <span style="color:#f92672">&lt;groupId&gt;</span>aopalliance<span style="color:#f92672">&lt;/groupId&gt;</span>
+    <span style="color:#f92672">&lt;artifactId&gt;</span>aopalliance<span style="color:#f92672">&lt;/artifactId&gt;</span>
+    <span style="color:#f92672">&lt;version&gt;</span>1.0<span style="color:#f92672">&lt;/version&gt;</span>
+<span style="color:#f92672">&lt;/dependency&gt;</span>
+</code></pre></div><p>这个包是 <strong>AOP联盟</strong> 的API包，里面包含了针对面向切面的接口。</p>
+<p>目前 Spring 已把改包 纳入到了 <code>spring-aop</code> 模块里面，所以无需依赖。</p>
+<h2 id="包结构">包结构</h2>
+<ul>
+<li>org.aopalliance
+<ul>
+<li>aop
+<ul>
+<li><code>Advice</code>： 空接口，标识 接口 是 一个 advice 接口（通知、增强，如：前置通知、后置增强&hellip; 直译过来是通知，按照代理的意思是增强）</li>
+<li>AspectException</li>
+</ul>
+</li>
+<li>intercept
+<ul>
+<li>
+<p><code>Interceptor</code> ： 空接口，标识 接口 是 一个 通用的拦截器。拦截器可以拦截运行时程序中的事件(方法调用、字段访问、异常&hellip;) ，事件的具体操作由 <code>Joinpoint</code> 实现</p>
+</li>
+<li>
+<p>ConstructorInterceptor：构造器 拦截器</p>
+</li>
+<li>
+<p>MethodInterceptor：方法 拦截器</p>
+</li>
+<li>
+<p><code>Joinpoint</code>：代码的执行，方法的执行，构造器的执行等，代表被切入的位置。功能：调用被切入对象、获取被切入对象、获取被调用对象（方法、构造器、字段..）</p>
+</li>
+<li>
+<p>Invocation：代表程序的调用，功能：获取调用参数</p>
+</li>
+<li>
+<p>ConstructorInvocation：构造器的调用，功能：获取 Constructor 构造器对象</p>
+</li>
+<li>
+<p>MethodInvocation：方法的调用：获取 Method 对象</p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="继承结构">继承结构</h2>
+<ul>
+<li><strong>Advice</strong> org.aopalliance.aop
+<ul>
+<li><strong>Interceptor</strong> org.aopalliance.intercept
+<ul>
+<li><strong>ConstructorInterceptor</strong> org.aopalliance.intercept</li>
+<li><strong>MethodInterceptor</strong> org.aopalliance.intercept</li>
+</ul>
+</li>
+<li><em>BeforeAdvice</em> org.springframework.aop</li>
+<li><em>AfterAdvice</em> org.springframework.aop
+<ul>
+<li><em>AfterReturningAdvice</em> org.springframework.aop</li>
+<li><em>ThrowsAdvice</em> org.springframework.aop</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Joinpoint</strong> org.aopalliance.intercept
+<ul>
+<li><strong>Invocation</strong> org.aopalliance.intercept
+<ul>
+<li><strong>ConstructorInvocation</strong> org.aopalliance.intercept</li>
+<li><strong>MethodInvocation</strong> org.aopalliance.intercept
+<ul>
+<li><em>ProxyMethodInvocation</em> org.springframework.aop
+<ul>
+<li><em>ReflectiveMethodInvocation</em> org.springframework.aop.framework
+<ul>
+<li><em>CglibMethodInvocation</em> org.springframework.aop.framework</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex justify-between">
+
+
+
+
+
+  <div>
+    <a class="flex align-center" href="https://github.com/hello-world-example/Spring-AOP/edit/master/HuGo/content/docs/spring-aop/aopalliance.md" target="_blank" rel="noopener">
+      <img src="/Spring-AOP/svg/edit.svg" class="book-icon" alt="Edit" />
+      <span>Edit this page</span>
+    </a>
+  </div>
+
+</div>
+
+ 
+        
+<script>
+var images = document.getElementsByTagName("img")
+console.info(images.length)
+for(var i=0; i<images.length; i++){
+  var image = images[i]
+  var src = image.getAttribute("src");
+  if(src.startsWith("-images")){
+    image.setAttribute("src", "../" + src)
+  }
+}
+</script>
+
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#aopalliance">aopalliance</a>
+      <ul>
+        <li><a href="#包结构">包结构</a></li>
+        <li><a href="#继承结构">继承结构</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+ 
+    </aside>
+    
+  </main>
+
+  
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

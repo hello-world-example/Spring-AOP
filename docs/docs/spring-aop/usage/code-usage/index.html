@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="基于代码进行 AOP 编程 基于代码进行 AOP 编程是 基于AspectJ注解 和 基于 Schema 的底层实现。
+ProxyFactory 硬编码 ProxyFactory 可以脱离 Spring 容器创建代理，根据目标类是否实现接口 或 相关设置 来返回 cglib 或 JDK 代理类。具体逻辑可查看 DefaultAopProxyFactory 类。
+ProxyFactory proxyFactory = new ProxyFactory(); // 设置目标类 proxyFactory.setTarget(new Hello()); // 设置通知 proxyFactory.addAdvice(new HelloAdvice()); Hello hello = (Hello) proxyFactory.getProxy(); ProxyFactoryBean ProxyFactoryBean 是一个 FactoryBean， 最佳使用场景是与 Spring 容器结合，与 ProxyFactory 的区别是 ProxyFactoryBean 实现了 Spring 生命周期的一些接口：BeanClassLoaderAware、BeanFactoryAware，可以从 Spring 容器中获取 Advice。
+下面也是一个硬编码的示例，每次只能代理一个目标类
+&lt;bean id=&#34;helloTarget&#34; class=&#34;xyz.kail.demo.Hello&#34;/&gt; &lt;bean id=&#34;helloAdvice&#34; class=&#34;xyz.kail.demo.HelloAdvice&#34;/&gt; &lt;bean id=&#34;person&#34; class=&#34;org.springframework.aop.framework.ProxyFactoryBean&#34;&gt; &lt;property name=&#34;target&#34; ref=&#34;helloTarget&#34;/&gt; &lt;property name=&#34;interceptorNames&#34;&gt; &lt;list&gt; &lt;!"><meta property="og:title" content="" />
+<meta property="og:description" content="基于代码进行 AOP 编程 基于代码进行 AOP 编程是 基于AspectJ注解 和 基于 Schema 的底层实现。
+ProxyFactory 硬编码 ProxyFactory 可以脱离 Spring 容器创建代理，根据目标类是否实现接口 或 相关设置 来返回 cglib 或 JDK 代理类。具体逻辑可查看 DefaultAopProxyFactory 类。
+ProxyFactory proxyFactory = new ProxyFactory(); // 设置目标类 proxyFactory.setTarget(new Hello()); // 设置通知 proxyFactory.addAdvice(new HelloAdvice()); Hello hello = (Hello) proxyFactory.getProxy(); ProxyFactoryBean ProxyFactoryBean 是一个 FactoryBean， 最佳使用场景是与 Spring 容器结合，与 ProxyFactory 的区别是 ProxyFactoryBean 实现了 Spring 生命周期的一些接口：BeanClassLoaderAware、BeanFactoryAware，可以从 Spring 容器中获取 Advice。
+下面也是一个硬编码的示例，每次只能代理一个目标类
+&lt;bean id=&#34;helloTarget&#34; class=&#34;xyz.kail.demo.Hello&#34;/&gt; &lt;bean id=&#34;helloAdvice&#34; class=&#34;xyz.kail.demo.HelloAdvice&#34;/&gt; &lt;bean id=&#34;person&#34; class=&#34;org.springframework.aop.framework.ProxyFactoryBean&#34;&gt; &lt;property name=&#34;target&#34; ref=&#34;helloTarget&#34;/&gt; &lt;property name=&#34;interceptorNames&#34;&gt; &lt;list&gt; &lt;!" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://hello-world-example.github.io/Spring-AOP/docs/spring-aop/usage/code-usage/" />
+
+<title>Code Usage | Spring-AOP</title>
+<link rel="icon" href="/Spring-AOP/favicon.png" type="image/x-icon">
+
+
+<link rel="stylesheet" href="/Spring-AOP/book.min.d436f463c9471cfab26a8b71cd2f50b6abf5225806391453da4ca111d1834fef.css" integrity="sha256-1Db0Y8lHHPqyaotxzS9Qtqv1IlgGORRT2kyhEdGDT&#43;8=">
+
+
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+  
+</head>
+
+<body>
+  <input type="checkbox" class="hidden" id="menu-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      
+  <nav>
+<h2 class="book-brand">
+  <a href="/Spring-AOP"><span>Spring-AOP</span>
+  </a>
+</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+  <ul>
+<li>
+  <a href="/Spring-AOP/docs/spring-aop/core/">概念</a></li>
+<li>
+  <a href="/Spring-AOP/docs/spring-aop/aopalliance/">aopalliance</a></li>
+<li><strong>Spring AOP 使用方式</strong>
+<ul>
+<li>
+  <a href="/Spring-AOP/docs/spring-aop/usage/annotation-usage/">基于AspectJ注解</a></li>
+<li>
+  <a href="/Spring-AOP/docs/spring-aop/usage/schema-xml-usage/">基于 Schema</a></li>
+<li>
+  <a href="/Spring-AOP/docs/spring-aop/usage/code-usage/"class=active>基于编码</a></li>
+</ul>
+</li>
+<li><strong>Handlers</strong>
+<ul>
+<li><strong>AopNamespaceHandler</strong>
+<ul>
+<li>
+  <a href="/Spring-AOP/docs/spring-aop/handlers/AopNamespaceHandler/spring-configured/">&lt;aop: spring-configured/&gt;</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var menu=document.querySelector("aside.book-menu nav");addEventListener("beforeunload",function(event){localStorage.setItem("menu.scrollTop",menu.scrollTop);});menu.scrollTop=localStorage.getItem("menu.scrollTop");})();</script>
+
+
+ 
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/Spring-AOP/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>Code Usage</strong>
+
+  <label for="toc-control">
+    <img src="/Spring-AOP/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+  </label>
+</div>
+
+
+  
+    <input type="checkbox" class="hidden" id="toc-control" />
+    <aside class="hidden clearfix">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#基于代码进行-aop-编程">基于代码进行 AOP 编程</a>
+      <ul>
+        <li><a href="#proxyfactory-硬编码">ProxyFactory 硬编码</a></li>
+        <li><a href="#proxyfactorybean">ProxyFactoryBean</a></li>
+        <li><a href="#autoproxy-自动扫描创建-aop-代理流程">AutoProxy 自动扫描创建 AOP 代理流程</a>
+          <ul>
+            <li><a href="#abstractautoproxycreator-继承结构">AbstractAutoProxyCreator 继承结构</a></li>
+          </ul>
+        </li>
+        <li><a href="#pointcut">Pointcut</a></li>
+        <li><a href="#advisor">Advisor</a></li>
+        <li><a href="#总结各个组件之间的关系">总结各个组件之间的关系</a></li>
+        <li><a href="#read-more">Read More</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+    </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown"><h1 id="基于代码进行-aop-编程">基于代码进行 AOP 编程</h1>
+<p>基于代码进行 AOP 编程是 
+  <a href="spring-aop/usage/annotation-usage.md"><strong>基于AspectJ注解</strong></a> 和 
+  <a href="spring-aop/usage/schema-xml-usage.md"><strong>基于 Schema</strong></a> 的底层实现。</p>
+<h2 id="proxyfactory-硬编码">ProxyFactory 硬编码</h2>
+<p>ProxyFactory 可以脱离 Spring 容器创建代理，根据目标类是否实现接口 或 相关设置 来返回 cglib 或 JDK 代理类。具体逻辑可查看 <code>DefaultAopProxyFactory</code> 类。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">ProxyFactory proxyFactory <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ProxyFactory<span style="color:#f92672">();</span>
+<span style="color:#75715e">// 设置目标类
+</span><span style="color:#75715e"></span>proxyFactory<span style="color:#f92672">.</span><span style="color:#a6e22e">setTarget</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Hello<span style="color:#f92672">());</span>
+<span style="color:#75715e">// 设置通知
+</span><span style="color:#75715e"></span>proxyFactory<span style="color:#f92672">.</span><span style="color:#a6e22e">addAdvice</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> HelloAdvice<span style="color:#f92672">());</span>
+Hello hello <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>Hello<span style="color:#f92672">)</span> proxyFactory<span style="color:#f92672">.</span><span style="color:#a6e22e">getProxy</span><span style="color:#f92672">();</span>
+</code></pre></div><h2 id="proxyfactorybean">ProxyFactoryBean</h2>
+<p><code>ProxyFactoryBean</code> 是一个 <code>FactoryBean</code>， 最佳使用场景是与 Spring 容器结合，与 <code>ProxyFactory</code> 的区别是 <code>ProxyFactoryBean</code> 实现了 Spring 生命周期的一些接口：BeanClassLoaderAware、BeanFactoryAware，可以从 Spring 容器中获取 Advice。</p>
+<p>下面也是一个硬编码的示例，每次只能代理一个目标类</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml">    <span style="color:#f92672">&lt;bean</span> <span style="color:#a6e22e">id=</span><span style="color:#e6db74">&#34;helloTarget&#34;</span> <span style="color:#a6e22e">class=</span><span style="color:#e6db74">&#34;xyz.kail.demo.Hello&#34;</span><span style="color:#f92672">/&gt;</span>
+
+    <span style="color:#f92672">&lt;bean</span> <span style="color:#a6e22e">id=</span><span style="color:#e6db74">&#34;helloAdvice&#34;</span> <span style="color:#a6e22e">class=</span><span style="color:#e6db74">&#34;xyz.kail.demo.HelloAdvice&#34;</span><span style="color:#f92672">/&gt;</span>
+
+    <span style="color:#f92672">&lt;bean</span> <span style="color:#a6e22e">id=</span><span style="color:#e6db74">&#34;person&#34;</span> <span style="color:#a6e22e">class=</span><span style="color:#e6db74">&#34;org.springframework.aop.framework.ProxyFactoryBean&#34;</span><span style="color:#f92672">&gt;</span>
+        <span style="color:#f92672">&lt;property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;target&#34;</span> <span style="color:#a6e22e">ref=</span><span style="color:#e6db74">&#34;helloTarget&#34;</span><span style="color:#f92672">/&gt;</span>
+        <span style="color:#f92672">&lt;property</span> <span style="color:#a6e22e">name=</span><span style="color:#e6db74">&#34;interceptorNames&#34;</span><span style="color:#f92672">&gt;</span>
+            <span style="color:#f92672">&lt;list&gt;</span>
+                <span style="color:#75715e">&lt;!-- 通过 bean 的名称获取 Advice --&gt;</span>
+                <span style="color:#f92672">&lt;value&gt;</span>helloAdvice<span style="color:#f92672">&lt;/value&gt;</span>
+            <span style="color:#f92672">&lt;/list&gt;</span>
+        <span style="color:#f92672">&lt;/property&gt;</span>
+    <span style="color:#f92672">&lt;/bean&gt;</span>
+</code></pre></div><h2 id="autoproxy-自动扫描创建-aop-代理流程">AutoProxy 自动扫描创建 AOP 代理流程</h2>
+<ol>
+<li>Spring 容器在 Bean 扫描完成后会把 <strong>上下文信息</strong> 和 <strong>Bean</strong>（目标类） 传入 <code>AbstractAutoProxyCreator</code></li>
+<li><code>AbstractAutoProxyCreator</code> 从 Spring 上下文中扫描 匹配 目标类 的 Advice，根据子类实现方式的不同 检索方式</li>
+<li>拿到Advice之后，根据目标类的属性不同，通过 <code>ProxyFactory</code> 创建 JDK 或 cglib 代理</li>
+</ol>
+<h3 id="abstractautoproxycreator-继承结构">AbstractAutoProxyCreator 继承结构</h3>
+<ul>
+<li><strong>ProxyConfig</strong> (..aop.framework) implements Advised
+<ul>
+<li>&hellip;</li>
+<li>ProxyProcessorSupport (..aop.framework)
+<ul>
+<li><strong>AbstractAutoProxyCreator</strong> (..aop.framework.autoproxy) implements <strong>..BeanPostProcessor</strong>, <strong>BeanFactoryAware</strong>
+<ul>
+<li>BeanNameAutoProxyCreator (..aop.framework.autoproxy)</li>
+<li><strong>AbstractAdvisorAutoProxyCreator</strong> (..aop.framework.autoproxy)
+<ul>
+<li>DefaultAdvisorAutoProxyCreator (..aop.framework.autoproxy)</li>
+<li><strong>AspectJAwareAdvisorAutoProxyCreator</strong> (..aop.aspectj.autoproxy)
+<ul>
+<li><strong>AnnotationAwareAspectJAutoProxyCreator</strong> (..aop.aspectj.annotation)</li>
+</ul>
+</li>
+<li>InfrastructureAdvisorAutoProxyCreator (..aop.framework.autoproxy)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>AbstractAdvisingBeanPostProcessor (..aop.framework) implements <strong>BeanPostProcessor</strong>
+<ul>
+<li>AbstractBeanFactoryAwareAdvisingPostProcessor (..aop.framework.autoproxy)
+<ul>
+<li>&hellip;</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>AbstractSingletonProxyFactoryBean</strong> (..aop.framework)
+<ul>
+<li><strong>TransactionProxyFactoryBean</strong> (..transaction.interceptor)</li>
+<li><strong>CacheProxyFactoryBean</strong> (..cache.interceptor)</li>
+</ul>
+</li>
+<li><strong>AdvisedSupport</strong> (..aop.framework)
+<ul>
+<li><strong>ProxyCreatorSupport</strong> (..aop.framework)
+<ul>
+<li><strong>ProxyFactoryBean</strong> (..aop.framework)</li>
+<li><strong>ProxyFactory</strong> (..aop.framework)</li>
+<li><strong>AspectJProxyFactory</strong> (..aop.aspectj.annotation)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="pointcut">Pointcut</h2>
+<p><code>Pointcut</code> 表示匹配规则，通过不同的语法表示一个位置，主要继承体系如下：</p>
+<ul>
+<li>Pointcut (..aop)：定义了 类与方法 匹配接口
+<ul>
+<li><strong>ExpressionPointcut</strong> (..aop.support)
+<ul>
+<li><strong>AbstractExpressionPointcut</strong> (..aop.support)
+<ul>
+<li><strong>AspectJExpressionPointcut</strong> (..aop.aspectj)：AspectJ 表达式语法</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>AnnotationMatchingPointcut (..aop.support.annotation)：注解匹配</li>
+<li><strong>StaticMethodMatcherPointcut</strong> (..aop.support)：只匹配方法，类默认匹配成功
+<ul>
+<li><strong>TransactionAttributeSourcePointcut</strong> (..transaction.interceptor) ：</li>
+<li>CacheOperationSourcePointcut (..cache.interceptor)</li>
+<li>AbstractRegexpMethodPointcut (..aop.support)
+<ul>
+<li><strong>JdkRegexpMethodPointcut</strong> (..aop.support)：通过 JDK 正则表达式匹配</li>
+</ul>
+</li>
+<li>NameMatchMethodPointcut (..aop.support)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="advisor">Advisor</h2>
+<p><code>Advisor</code>  用来组装 <code>Pointcut</code> 和 <code>Advice</code>。创建代理类的时候，通过 <code>Pointcut</code> 配置匹配目标类，通过 <code>Advice</code> 增强目标类创建代理。</p>
+<ul>
+<li>Advisor (..aop)
+<ul>
+<li><strong>PointcutAdvisor</strong> (..aop)
+<ul>
+<li>StaticMethodMatcherPointcutAdvisor (..aop.support)</li>
+<li>AspectJPointcutAdvisor (..aop.aspectj)</li>
+<li><strong>AbstractPointcutAdvisor</strong> (..aop.support)
+<ul>
+<li>AsyncAnnotationAdvisor (..scheduling.annotation)</li>
+<li>PersistenceExceptionTranslationAdvisor (..dao.annotation)</li>
+<li><strong>AbstractBeanFactoryPointcutAdvisor</strong> (..aop.support)
+<ul>
+<li><strong>BeanFactoryTransactionAttributeSourceAdvisor</strong> (..transaction.interceptor)</li>
+<li><strong>DefaultBeanFactoryPointcutAdvisor</strong> (..aop.support)</li>
+<li>BeanFactoryCacheOperationSourceAdvisor (..cache.interceptor)</li>
+</ul>
+</li>
+<li>AbstractGenericPointcutAdvisor (..aop.support)
+<ul>
+<li>RegexpMethodPointcutAdvisor (..aop.support)</li>
+<li><strong>AspectJExpressionPointcutAdvisor</strong> (..aop.aspectj)</li>
+<li><strong>NameMatchMethodPointcutAdvisor</strong> (..aop.support)</li>
+<li><strong>DefaultPointcutAdvisor</strong> (..aop.support)</li>
+</ul>
+</li>
+<li><strong>TransactionAttributeSourceAdvisor</strong> (..transaction.interceptor)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>IntroductionAdvisor (..aop)
+<ul>
+<li>DefaultIntroductionAdvisor (..aop.support)</li>
+<li>DeclareParentsAdvisor (..aop.aspectj)</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="总结各个组件之间的关系">总结各个组件之间的关系</h2>
+<ul>
+<li>Pointcut：用来描述匹配规则，匹配 类 和 方法</li>
+<li>Advice：代表具体要增强的功能，如：前置通知(拦截器)要做什么、后置通知(拦截器)要做什么 等</li>
+<li>Advisor：等于 Pointcut + Advice</li>
+<li>Creator：会扫描容器中 Advisor，对 Spring 容器中 Bean 进行匹配，匹配成功通过 Advice 进行增强</li>
+</ul>
+<h2 id="read-more">Read More</h2>
+<ul>
+<li>
+  <a href="http://shouce.jb51.net/spring/aop-api.html">【中文】Spring AOP APIs</a></li>
+<li>
+  <a href="https://docs.spring.io/spring-framework/docs/current/spring-framework-reference/core.html#aop-api">6. Spring AOP APIs</a></li>
+<li>
+  <a href="http://cxis.me/2017/04/10/Spring%E4%B8%ADAOP%E7%9A%84%E9%85%8D%E7%BD%AE%E4%BB%8E1.0%E5%88%B05.0%E7%9A%84%E6%BC%94%E8%BF%9B/">Spring中AOP的配置从1.0到5.0的演进</a></li>
+<li>
+  <a href="https://blog.csdn.net/qq_26525215/article/details/52422395/">Spring AOP拦截-使用切点:AspectJExpressionPointcut-切点语言</a></li>
+</ul>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex justify-between">
+
+
+
+
+
+  <div>
+    <a class="flex align-center" href="https://github.com/hello-world-example/Spring-AOP/edit/master/HuGo/content/docs/spring-aop/usage/code-usage.md" target="_blank" rel="noopener">
+      <img src="/Spring-AOP/svg/edit.svg" class="book-icon" alt="Edit" />
+      <span>Edit this page</span>
+    </a>
+  </div>
+
+</div>
+
+ 
+        
+<script>
+var images = document.getElementsByTagName("img")
+console.info(images.length)
+for(var i=0; i<images.length; i++){
+  var image = images[i]
+  var src = image.getAttribute("src");
+  if(src.startsWith("-images")){
+    image.setAttribute("src", "../" + src)
+  }
+}
+</script>
+
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#基于代码进行-aop-编程">基于代码进行 AOP 编程</a>
+      <ul>
+        <li><a href="#proxyfactory-硬编码">ProxyFactory 硬编码</a></li>
+        <li><a href="#proxyfactorybean">ProxyFactoryBean</a></li>
+        <li><a href="#autoproxy-自动扫描创建-aop-代理流程">AutoProxy 自动扫描创建 AOP 代理流程</a>
+          <ul>
+            <li><a href="#abstractautoproxycreator-继承结构">AbstractAutoProxyCreator 继承结构</a></li>
+          </ul>
+        </li>
+        <li><a href="#pointcut">Pointcut</a></li>
+        <li><a href="#advisor">Advisor</a></li>
+        <li><a href="#总结各个组件之间的关系">总结各个组件之间的关系</a></li>
+        <li><a href="#read-more">Read More</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+ 
+    </aside>
+    
+  </main>
+
+  
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

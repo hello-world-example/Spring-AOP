@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="基于 schema 进行 AOP 编程 定义切面 package xyz.kail.demo; import org.aspectj.lang.ProceedingJoinPoint; public class HelloAspectj { /** * 前置通知 */ public void before() { System.out.println(&#34;before() 有个事务&#34;); } /** * 环绕通知 */ private Object around(ProceedingJoinPoint pjp) throws Throwable { try { System.out.println(&#34;around() 开始事务&#34;); Object result = pjp.proceed(pjp.getArgs()); System.out.println(&#34;around() 提交事务&#34;); return result; } catch (Throwable ex) { System.out.println(&#34;around() 回滚事务&#34;); throw ex; } finally { System.out.println(&#34;around() 释放资源&#34;); } } /** * 后置通知 */ public void afterReturning(Long result) { System."><meta property="og:title" content="" />
+<meta property="og:description" content="基于 schema 进行 AOP 编程 定义切面 package xyz.kail.demo; import org.aspectj.lang.ProceedingJoinPoint; public class HelloAspectj { /** * 前置通知 */ public void before() { System.out.println(&#34;before() 有个事务&#34;); } /** * 环绕通知 */ private Object around(ProceedingJoinPoint pjp) throws Throwable { try { System.out.println(&#34;around() 开始事务&#34;); Object result = pjp.proceed(pjp.getArgs()); System.out.println(&#34;around() 提交事务&#34;); return result; } catch (Throwable ex) { System.out.println(&#34;around() 回滚事务&#34;); throw ex; } finally { System.out.println(&#34;around() 释放资源&#34;); } } /** * 后置通知 */ public void afterReturning(Long result) { System." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://hello-world-example.github.io/Spring-AOP/docs/spring-aop/usage/schema-xml-usage/" />
+
+<title>Schema Xml Usage | Spring-AOP</title>
+<link rel="icon" href="/Spring-AOP/favicon.png" type="image/x-icon">
+
+
+<link rel="stylesheet" href="/Spring-AOP/book.min.d436f463c9471cfab26a8b71cd2f50b6abf5225806391453da4ca111d1834fef.css" integrity="sha256-1Db0Y8lHHPqyaotxzS9Qtqv1IlgGORRT2kyhEdGDT&#43;8=">
+
+
+<!--
+Made with Book Theme
+https://github.com/alex-shpak/hugo-book
+-->
+
+  
+</head>
+
+<body>
+  <input type="checkbox" class="hidden" id="menu-control" />
+  <main class="container flex">
+    <aside class="book-menu">
+      
+  <nav>
+<h2 class="book-brand">
+  <a href="/Spring-AOP"><span>Spring-AOP</span>
+  </a>
+</h2>
+
+
+
+
+
+
+
+
+
+
+
+
+  <ul>
+<li>
+  <a href="/Spring-AOP/docs/spring-aop/core/">概念</a></li>
+<li>
+  <a href="/Spring-AOP/docs/spring-aop/aopalliance/">aopalliance</a></li>
+<li><strong>Spring AOP 使用方式</strong>
+<ul>
+<li>
+  <a href="/Spring-AOP/docs/spring-aop/usage/annotation-usage/">基于AspectJ注解</a></li>
+<li>
+  <a href="/Spring-AOP/docs/spring-aop/usage/schema-xml-usage/"class=active>基于 Schema</a></li>
+<li>
+  <a href="/Spring-AOP/docs/spring-aop/usage/code-usage/">基于编码</a></li>
+</ul>
+</li>
+<li><strong>Handlers</strong>
+<ul>
+<li><strong>AopNamespaceHandler</strong>
+<ul>
+<li>
+  <a href="/Spring-AOP/docs/spring-aop/handlers/AopNamespaceHandler/spring-configured/">&lt;aop: spring-configured/&gt;</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+</nav>
+
+
+
+
+  <script>(function(){var menu=document.querySelector("aside.book-menu nav");addEventListener("beforeunload",function(event){localStorage.setItem("menu.scrollTop",menu.scrollTop);});menu.scrollTop=localStorage.getItem("menu.scrollTop");})();</script>
+
+
+ 
+    </aside>
+
+    <div class="book-page">
+      <header class="book-header">
+        
+  <div class="flex align-center justify-between">
+  <label for="menu-control">
+    <img src="/Spring-AOP/svg/menu.svg" class="book-icon" alt="Menu" />
+  </label>
+
+  <strong>Schema Xml Usage</strong>
+
+  <label for="toc-control">
+    <img src="/Spring-AOP/svg/toc.svg" class="book-icon" alt="Table of Contents" />
+  </label>
+</div>
+
+
+  
+    <input type="checkbox" class="hidden" id="toc-control" />
+    <aside class="hidden clearfix">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#基于-schema-进行-aop-编程">基于 schema 进行 AOP 编程</a>
+      <ul>
+        <li><a href="#定义切面">定义切面</a></li>
+        <li><a href="#目标类">目标类</a></li>
+        <li><a href="#schema-配置文件">schema 配置文件</a></li>
+        <li><a href="#启动程序">启动程序</a></li>
+        <li><a href="#输出">输出</a></li>
+        <li><a href="#read-more">Read More</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+    </aside>
+  
+ 
+      </header>
+
+      
+      
+  <article class="markdown"><h1 id="基于-schema-进行-aop-编程">基于 schema 进行 AOP 编程</h1>
+<h2 id="定义切面">定义切面</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">package</span> xyz.kail.demo<span style="color:#f92672">;</span>
+
+<span style="color:#f92672">import</span> org.aspectj.lang.ProceedingJoinPoint<span style="color:#f92672">;</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">HelloAspectj</span> <span style="color:#f92672">{</span>
+
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * 前置通知
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">before</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;before() 有个事务&#34;</span><span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * 环绕通知
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">private</span> Object <span style="color:#a6e22e">around</span><span style="color:#f92672">(</span>ProceedingJoinPoint pjp<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> Throwable <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+            System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;around() 开始事务&#34;</span><span style="color:#f92672">);</span>
+            Object result <span style="color:#f92672">=</span> pjp<span style="color:#f92672">.</span><span style="color:#a6e22e">proceed</span><span style="color:#f92672">(</span>pjp<span style="color:#f92672">.</span><span style="color:#a6e22e">getArgs</span><span style="color:#f92672">());</span>
+            System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;around() 提交事务&#34;</span><span style="color:#f92672">);</span>
+            <span style="color:#66d9ef">return</span> result<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Throwable ex<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;around() 回滚事务&#34;</span><span style="color:#f92672">);</span>
+            <span style="color:#66d9ef">throw</span> ex<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">finally</span> <span style="color:#f92672">{</span>
+            System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;around() 释放资源&#34;</span><span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * 后置通知
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">afterReturning</span><span style="color:#f92672">(</span>Long result<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;afterReturning() 事务正常结束，返回结果：&#34;</span> <span style="color:#f92672">+</span> result<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * 异常通知
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">afterThrowing</span><span style="color:#f92672">(</span>Throwable ex<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;afterThrowing() 事务错误，回滚； 异常信息：&#34;</span> <span style="color:#f92672">+</span> ex<span style="color:#f92672">.</span><span style="color:#a6e22e">getMessage</span><span style="color:#f92672">());</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * 最终通知
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">after</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;after() 释放资源&#34;</span><span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h2 id="目标类">目标类</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">package</span> xyz.kail.demo<span style="color:#f92672">;</span>
+
+<span style="color:#f92672">import</span> org.springframework.transaction.annotation.Transactional<span style="color:#f92672">;</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Hello</span> <span style="color:#f92672">{</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">long</span> <span style="color:#a6e22e">say</span><span style="color:#f92672">(</span>String something<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Hello &#34;</span> <span style="color:#f92672">+</span> something<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">return</span> System<span style="color:#f92672">.</span><span style="color:#a6e22e">currentTimeMillis</span><span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#a6e22e">@Transactional</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">long</span> <span style="color:#a6e22e">doit</span><span style="color:#f92672">(</span>String something<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;doit &#34;</span> <span style="color:#f92672">+</span> something<span style="color:#f92672">);</span>
+        <span style="color:#75715e">// 异常
+</span><span style="color:#75715e"></span>        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>1 <span style="color:#f92672">/</span> 0<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">return</span> System<span style="color:#f92672">.</span><span style="color:#a6e22e">currentTimeMillis</span><span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+
+<span style="color:#f92672">}</span>
+
+</code></pre></div><h2 id="schema-配置文件">schema 配置文件</h2>
+<p>applicationContext.xml</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#75715e">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;</span>
+<span style="color:#f92672">&lt;beans</span> <span style="color:#a6e22e">xmlns=</span><span style="color:#e6db74">&#34;http://www.springframework.org/schema/beans&#34;</span>
+       <span style="color:#a6e22e">xmlns:xsi=</span><span style="color:#e6db74">&#34;http://www.w3.org/2001/XMLSchema-instance&#34;</span>
+       <span style="color:#a6e22e">xmlns:aop=</span><span style="color:#e6db74">&#34;http://www.springframework.org/schema/aop&#34;</span>
+       <span style="color:#a6e22e">xsi:schemaLocation=</span><span style="color:#e6db74">&#34;http://www.springframework.org/schema/beans
+</span><span style="color:#e6db74">        http://www.springframework.org/schema/beans/spring-beans.xsd
+</span><span style="color:#e6db74">        http://www.springframework.org/schema/aop
+</span><span style="color:#e6db74">        http://www.springframework.org/schema/aop/spring-aop.xsd&#34;</span><span style="color:#f92672">&gt;</span>
+
+    <span style="color:#f92672">&lt;bean</span> <span style="color:#a6e22e">id=</span><span style="color:#e6db74">&#34;hello&#34;</span> <span style="color:#a6e22e">class=</span><span style="color:#e6db74">&#34;xyz.kail.demo.Hello&#34;</span><span style="color:#f92672">/&gt;</span>
+    <span style="color:#f92672">&lt;bean</span> <span style="color:#a6e22e">id=</span><span style="color:#e6db74">&#34;helloAspectj&#34;</span> <span style="color:#a6e22e">class=</span><span style="color:#e6db74">&#34;xyz.kail.demo.HelloAspectj&#34;</span><span style="color:#f92672">/&gt;</span>
+
+    <span style="color:#f92672">&lt;aop:config&gt;</span>
+        <span style="color:#f92672">&lt;aop:pointcut</span> <span style="color:#a6e22e">id=</span><span style="color:#e6db74">&#34;sayMethod&#34;</span> <span style="color:#a6e22e">expression=</span><span style="color:#e6db74">&#34;execution( * say(..) ) or @annotation(org.springframework.transaction.annotation.Transactional)&#34;</span><span style="color:#f92672">/&gt;</span>
+
+        <span style="color:#f92672">&lt;aop:aspect</span> <span style="color:#a6e22e">ref=</span><span style="color:#e6db74">&#34;helloAspectj&#34;</span><span style="color:#f92672">&gt;</span>
+            <span style="color:#f92672">&lt;aop:before</span> <span style="color:#a6e22e">pointcut-ref=</span><span style="color:#e6db74">&#34;sayMethod&#34;</span> <span style="color:#a6e22e">method=</span><span style="color:#e6db74">&#34;before&#34;</span><span style="color:#f92672">/&gt;</span>
+            <span style="color:#f92672">&lt;aop:around</span> <span style="color:#a6e22e">pointcut-ref=</span><span style="color:#e6db74">&#34;sayMethod&#34;</span> <span style="color:#a6e22e">method=</span><span style="color:#e6db74">&#34;around&#34;</span><span style="color:#f92672">/&gt;</span>
+            <span style="color:#f92672">&lt;aop:after</span> <span style="color:#a6e22e">pointcut-ref=</span><span style="color:#e6db74">&#34;sayMethod&#34;</span> <span style="color:#a6e22e">method=</span><span style="color:#e6db74">&#34;after&#34;</span><span style="color:#f92672">/&gt;</span>
+            <span style="color:#f92672">&lt;aop:after-throwing</span> <span style="color:#a6e22e">pointcut-ref=</span><span style="color:#e6db74">&#34;sayMethod&#34;</span> <span style="color:#a6e22e">method=</span><span style="color:#e6db74">&#34;afterThrowing&#34;</span> <span style="color:#a6e22e">throwing=</span><span style="color:#e6db74">&#34;ex&#34;</span><span style="color:#f92672">/&gt;</span>
+            <span style="color:#f92672">&lt;aop:after-returning</span> <span style="color:#a6e22e">pointcut-ref=</span><span style="color:#e6db74">&#34;sayMethod&#34;</span> <span style="color:#a6e22e">method=</span><span style="color:#e6db74">&#34;afterReturning&#34;</span> <span style="color:#a6e22e">returning=</span><span style="color:#e6db74">&#34;result&#34;</span><span style="color:#f92672">/&gt;</span>
+        <span style="color:#f92672">&lt;/aop:aspect&gt;</span>
+    <span style="color:#f92672">&lt;/aop:config&gt;</span>
+
+<span style="color:#f92672">&lt;/beans&gt;</span>
+</code></pre></div><h2 id="启动程序">启动程序</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">package</span> xyz.kail.demo<span style="color:#f92672">;</span>
+
+<span style="color:#f92672">import</span> org.springframework.context.ApplicationContext<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> org.springframework.context.support.ClassPathXmlApplicationContext<span style="color:#f92672">;</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">App</span> <span style="color:#f92672">{</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        ApplicationContext context <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ClassPathXmlApplicationContext<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;classpath:/applicationContext.xml&#34;</span><span style="color:#f92672">);</span>
+        Hello hello <span style="color:#f92672">=</span> context<span style="color:#f92672">.</span><span style="color:#a6e22e">getBean</span><span style="color:#f92672">(</span>Hello<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>hello<span style="color:#f92672">.</span><span style="color:#a6e22e">getClass</span><span style="color:#f92672">());</span>
+
+        hello<span style="color:#f92672">.</span><span style="color:#a6e22e">say</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;World&#34;</span><span style="color:#f92672">);</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34; ============ &#34;</span><span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+            hello<span style="color:#f92672">.</span><span style="color:#a6e22e">doit</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;World&#34;</span><span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Exception ex<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#75715e">// 吃掉异常信息
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h2 id="输出">输出</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#75715e"># 使用的 cglib 代理</span>
+class xyz.kail.demo.Hello$$EnhancerBySpringCGLIB$$2d590916
+# 
+<span style="color:#75715e"># 调用 say 方法</span>
+before<span style="color:#f92672">()</span> 有个事务
+around<span style="color:#f92672">()</span> 开始事务
+Hello World
+around<span style="color:#f92672">()</span> 提交事务
+around<span style="color:#f92672">()</span> 释放资源
+after<span style="color:#f92672">()</span> 释放资源
+<span style="color:#75715e"># afterReturning 在 after 后执行</span>
+afterReturning<span style="color:#f92672">()</span> 事务正常结束，返回结果：1542448402933
+ <span style="color:#f92672">============</span> 
+# 
+<span style="color:#75715e"># 调用 doit 方法</span> 
+before<span style="color:#f92672">()</span> 有个事务
+around<span style="color:#f92672">()</span> 开始事务
+doit World
+around<span style="color:#f92672">()</span> 回滚事务
+around<span style="color:#f92672">()</span> 释放资源
+after<span style="color:#f92672">()</span> 释放资源
+<span style="color:#75715e"># 抛出异常，被执行</span>
+afterThrowing<span style="color:#f92672">()</span> 事务错误，回滚； 异常信息：/ by zero
+<span style="color:#75715e"># 抛出异常后 不执行 afterReturning</span>
+</code></pre></div><h2 id="read-more">Read More</h2>
+<ul>
+<li>
+  <a href="http://shouce.jb51.net/spring/aop.html#aop-schema">使用Spring进行面向切面编程（AOP） 6.3. 基于Schema的AOP支持</a></li>
+</ul>
+</article>
+ 
+      
+
+      <footer class="book-footer">
+        
+  <div class="flex justify-between">
+
+
+
+
+
+  <div>
+    <a class="flex align-center" href="https://github.com/hello-world-example/Spring-AOP/edit/master/HuGo/content/docs/spring-aop/usage/schema-xml-usage.md" target="_blank" rel="noopener">
+      <img src="/Spring-AOP/svg/edit.svg" class="book-icon" alt="Edit" />
+      <span>Edit this page</span>
+    </a>
+  </div>
+
+</div>
+
+ 
+        
+<script>
+var images = document.getElementsByTagName("img")
+console.info(images.length)
+for(var i=0; i<images.length; i++){
+  var image = images[i]
+  var src = image.getAttribute("src");
+  if(src.startsWith("-images")){
+    image.setAttribute("src", "../" + src)
+  }
+}
+</script>
+
+      </footer>
+
+      
+  
+  <div class="book-comments">
+
+</div>
+  
+ 
+
+      <label for="menu-control" class="hidden book-menu-overlay"></label>
+    </div>
+
+    
+    <aside class="book-toc">
+      
+  <nav id="TableOfContents">
+  <ul>
+    <li><a href="#基于-schema-进行-aop-编程">基于 schema 进行 AOP 编程</a>
+      <ul>
+        <li><a href="#定义切面">定义切面</a></li>
+        <li><a href="#目标类">目标类</a></li>
+        <li><a href="#schema-配置文件">schema 配置文件</a></li>
+        <li><a href="#启动程序">启动程序</a></li>
+        <li><a href="#输出">输出</a></li>
+        <li><a href="#read-more">Read More</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+ 
+    </aside>
+    
+  </main>
+
+  
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

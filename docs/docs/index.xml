@@ -1,13 +1,87 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Docs on Template-Hugo</title>
-    <link>https://hello-world-example.github.io/Template-Hugo/docs/</link>
-    <description>Recent content in Docs on Template-Hugo</description>
+    <title>Docs on Spring-AOP</title>
+    <link>https://hello-world-example.github.io/Spring-AOP/docs/</link>
+    <description>Recent content in Docs on Spring-AOP</description>
     <generator>Hugo -- gohugo.io</generator>
     
-	<atom:link href="https://hello-world-example.github.io/Template-Hugo/docs/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://hello-world-example.github.io/Spring-AOP/docs/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title></title>
+      <link>https://hello-world-example.github.io/Spring-AOP/docs/spring-aop/aopalliance/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://hello-world-example.github.io/Spring-AOP/docs/spring-aop/aopalliance/</guid>
+      <description>aopalliance &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;aopalliance&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;aopalliance&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;1.0&amp;lt;/version&amp;gt; &amp;lt;/dependency&amp;gt; 这个包是 AOP联盟 的API包，里面包含了针对面向切面的接口。
+目前 Spring 已把改包 纳入到了 spring-aop 模块里面，所以无需依赖。
+包结构  org.aopalliance  aop  Advice： 空接口，标识 接口 是 一个 advice 接口（通知、增强，如：前置通知、后置增强&amp;hellip; 直译过来是通知，按照代理的意思是增强） AspectException   intercept   Interceptor ： 空接口，标识 接口 是 一个 通用的拦截器。拦截器可以拦截运行时程序中的事件(方法调用、字段访问、异常&amp;hellip;) ，事件的具体操作由 Joinpoint 实现
+  ConstructorInterceptor：构造器 拦截器
+  MethodInterceptor：方法 拦截器
+  Joinpoint：代码的执行，方法的执行，构造器的执行等，代表被切入的位置。功能：调用被切入对象、获取被切入对象、获取被调用对象（方法、构造器、字段..）
+  Invocation：代表程序的调用，功能：获取调用参数
+  ConstructorInvocation：构造器的调用，功能：获取 Constructor 构造器对象
+  MethodInvocation：方法的调用：获取 Method 对象
+      继承结构  Advice org.</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://hello-world-example.github.io/Spring-AOP/docs/spring-aop/core/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://hello-world-example.github.io/Spring-AOP/docs/spring-aop/core/</guid>
+      <description>Spring AOP 核心概念 术语  切面（Aspect）：可理解为AOP切入的单元 连接点（Joinpoint）：表示一个方法的执行，常作为 通知（Advice） 方法的参数 切入点（Pointcut）：匹配连接点的语法 通知（Advice）：在切面的某个特定的连接点上执行的动作  前置通知：连接点之前执行，@Before 后置通知：连接点正常完成后执行，@AfterReturning 异常通知：抛出异常时执行，@AfterThrowing 最终通知：当某连接点退出的时候执行的通知，After，不论是正常返回还是异常退出 环绕通知：以上四种通知都可以通过环绕通知实现，@Around。但是，用最合适的通知类型可以使得编程模型变得简单，并且能够避免很多潜在的错误，这是其他类型通知存在的价值。   Advisor：用于把 Advice 和 Pointcut 进行绑定，就像是只有一个通知的切面。在AspectJ中没有等价的概念 引入（Introduction）：用来给一个类型声明额外的方法或属性 目标对象（Target Object）： 被代理对象、被切入对象 织入（Weaving）：把切面连接到其它的应用程序类型或者对象上，并创建一个被通知的对象。这些可以在编译时、类加载时、运行时完成。Spring在运行时完成织入 AspectJ：AOP 的一种实现方式，可采用 编译时 或 类加载时的代码织入（Spring AOP 则使用 运行时织入）。控制力度 比 Spring AOP 更细，可对私有方法、变量等进行控制。Spring 可无缝集成 AspectJ。  Spring AOP 如何选择 JDK 或 cglib 代理? 具体逻辑如下：
+public class DefaultAopProxyFactory implements AopProxyFactory, Serializable { @Override public AopProxy createAopProxy(AdvisedSupport config) throws AopConfigException { /* * optimize 被设置为 true * || proxyTargetClass 被设置为 true，&amp;lt;aop:aspectj-autoproxy proxy-target-class=&amp;#34;true&amp;#34;/&amp;gt; * || 目标类 没有接口 或 接口是org.</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://hello-world-example.github.io/Spring-AOP/docs/spring-aop/handlers/AopNamespaceHandler/spring-configured/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://hello-world-example.github.io/Spring-AOP/docs/spring-aop/handlers/AopNamespaceHandler/spring-configured/</guid>
+      <description>&amp;lt;aop: spring-configured/&amp;gt; 当我们使用 Spring 容器的时候，一般是从 Spring 容器中获取 Bean，Spring 会自动进行 依赖注入。
+&amp;lt;aop:spring-configured/&amp;gt; 的作用是，提供了能为任何对象进行依赖注入的能力，场景是在脱离容器管理而创建的对象时进行依赖注入，如：
+ 脱离Spring 容器进行 事务管理 其他&amp;hellip; 详见 spring-aspects.xxx.jar:/META-INF/aop.xml 中的支持  原理是 AspectJ 的 编译期 或 类加载时 织入，new 对象前已经在 class字节码中 织入了相关代码。
+所以需要 AspectJ 提供的 ajc 编译器进行编译（也可通过 Maven 插件进行编译），也可 通过 LTW 机制进行使用。
+AspectJ Maven 插件进行编译（编译期织入） 官方：http://www.mojohaus.org/aspectj-maven-plugin/index.html
+示例：
+&amp;lt;plugins&amp;gt; &amp;lt;plugin&amp;gt; &amp;lt;groupId&amp;gt;org.codehaus.mojo&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;aspectj-maven-plugin&amp;lt;/artifactId&amp;gt; &amp;lt;version&amp;gt;1.11&amp;lt;/version&amp;gt; &amp;lt;configuration&amp;gt; &amp;lt;outxmlfile&amp;gt;META-INF/aop.xml&amp;lt;/outxmlfile&amp;gt; &amp;lt;aspectLibraries&amp;gt; &amp;lt;aspectLibrary&amp;gt; &amp;lt;groupId&amp;gt;org.springframework&amp;lt;/groupId&amp;gt; &amp;lt;artifactId&amp;gt;spring-aspects&amp;lt;/artifactId&amp;gt; &amp;lt;/aspectLibrary&amp;gt; &amp;lt;/aspectLibraries&amp;gt; &amp;lt;complianceLevel&amp;gt;1.8&amp;lt;/complianceLevel&amp;gt; &amp;lt;source&amp;gt;1.8&amp;lt;/source&amp;gt; &amp;lt;target&amp;gt;1.8&amp;lt;/target&amp;gt; &amp;lt;forceAjcCompile&amp;gt;true&amp;lt;/forceAjcCompile&amp;gt; &amp;lt;/configuration&amp;gt; &amp;lt;executions&amp;gt; &amp;lt;execution&amp;gt; &amp;lt;goals&amp;gt; &amp;lt;goal&amp;gt;compile&amp;lt;/goal&amp;gt; &amp;lt;goal&amp;gt;test-compile&amp;lt;/goal&amp;gt; &amp;lt;/goals&amp;gt; &amp;lt;/execution&amp;gt; &amp;lt;/executions&amp;gt; &amp;lt;dependencies&amp;gt; &amp;lt;dependency&amp;gt; &amp;lt;groupId&amp;gt;org.</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://hello-world-example.github.io/Spring-AOP/docs/spring-aop/usage/annotation-usage/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://hello-world-example.github.io/Spring-AOP/docs/spring-aop/usage/annotation-usage/</guid>
+      <description>基于注解进行 AOP 编程 打开开关  &amp;lt;aop:aspectj-autoproxy/&amp;gt; 或 &amp;lt;bean class=&amp;quot;org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator&amp;quot; /&amp;gt; 或 @EnableAspectJAutoProxy  编写切面 package xyz.kail.demo; import org.aspectj.lang.ProceedingJoinPoint; import org.aspectj.lang.annotation.*; import org.springframework.stereotype.Component; @Aspect @Component public class HelloAspectj { /** * 所有的 say 方法 */ @Pointcut(&amp;#34;execution( * say(..) )&amp;#34;)// 切入点表达式  public void sayMethod() { // 切入点签名，返回类型必须是 void  // 切入点代表一些列位置，没有具体执行逻辑  } /** * 所有的带有 @Transactional 或者 方法名是 say 的方法 */ @Pointcut(&amp;#34;sayMethod() || @annotation(org.springframework.transaction.annotation.Transactional)&amp;#34;) public void tx() { } /** * 前置通知 */ @Before(&amp;#34;tx()&amp;#34;) public void before() { System.</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://hello-world-example.github.io/Spring-AOP/docs/spring-aop/usage/code-usage/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://hello-world-example.github.io/Spring-AOP/docs/spring-aop/usage/code-usage/</guid>
+      <description>基于代码进行 AOP 编程 基于代码进行 AOP 编程是 基于AspectJ注解 和 基于 Schema 的底层实现。
+ProxyFactory 硬编码 ProxyFactory 可以脱离 Spring 容器创建代理，根据目标类是否实现接口 或 相关设置 来返回 cglib 或 JDK 代理类。具体逻辑可查看 DefaultAopProxyFactory 类。
+ProxyFactory proxyFactory = new ProxyFactory(); // 设置目标类 proxyFactory.setTarget(new Hello()); // 设置通知 proxyFactory.addAdvice(new HelloAdvice()); Hello hello = (Hello) proxyFactory.getProxy(); ProxyFactoryBean ProxyFactoryBean 是一个 FactoryBean， 最佳使用场景是与 Spring 容器结合，与 ProxyFactory 的区别是 ProxyFactoryBean 实现了 Spring 生命周期的一些接口：BeanClassLoaderAware、BeanFactoryAware，可以从 Spring 容器中获取 Advice。
+下面也是一个硬编码的示例，每次只能代理一个目标类
+&amp;lt;bean id=&amp;#34;helloTarget&amp;#34; class=&amp;#34;xyz.kail.demo.Hello&amp;#34;/&amp;gt; &amp;lt;bean id=&amp;#34;helloAdvice&amp;#34; class=&amp;#34;xyz.kail.demo.HelloAdvice&amp;#34;/&amp;gt; &amp;lt;bean id=&amp;#34;person&amp;#34; class=&amp;#34;org.springframework.aop.framework.ProxyFactoryBean&amp;#34;&amp;gt; &amp;lt;property name=&amp;#34;target&amp;#34; ref=&amp;#34;helloTarget&amp;#34;/&amp;gt; &amp;lt;property name=&amp;#34;interceptorNames&amp;#34;&amp;gt; &amp;lt;list&amp;gt; &amp;lt;!</description>
+    </item>
+    
+    <item>
+      <title></title>
+      <link>https://hello-world-example.github.io/Spring-AOP/docs/spring-aop/usage/schema-xml-usage/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://hello-world-example.github.io/Spring-AOP/docs/spring-aop/usage/schema-xml-usage/</guid>
+      <description>基于 schema 进行 AOP 编程 定义切面 package xyz.kail.demo; import org.aspectj.lang.ProceedingJoinPoint; public class HelloAspectj { /** * 前置通知 */ public void before() { System.out.println(&amp;#34;before() 有个事务&amp;#34;); } /** * 环绕通知 */ private Object around(ProceedingJoinPoint pjp) throws Throwable { try { System.out.println(&amp;#34;around() 开始事务&amp;#34;); Object result = pjp.proceed(pjp.getArgs()); System.out.println(&amp;#34;around() 提交事务&amp;#34;); return result; } catch (Throwable ex) { System.out.println(&amp;#34;around() 回滚事务&amp;#34;); throw ex; } finally { System.out.println(&amp;#34;around() 释放资源&amp;#34;); } } /** * 后置通知 */ public void afterReturning(Long result) { System.</description>
+    </item>
     
   </channel>
 </rss>
